@@ -1,0 +1,56 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: check-cni-plugin
+  namespace: open-cluster-management
+  annotations:
+    policy.open-cluster-management.io/description: Policy checks if the CNI plugin is set to OVNKubernetes or to OpenShiftSDN.
+    policy.open-cluster-management.io/message: The CNI plugin is not set to OVNKubernetes but to OpenShiftSDN.
+    policy.open-cluster-management.io/standards: NETWORKING
+    policy.open-cluster-management.io/categories: NETWORKING-CNI
+    policy.open-cluster-management.io/controls: NETWORKING-CNI-DRIVER
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: check-cni-plugin
+        spec:
+          remediationAction: inform
+          severity: low
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operator.openshift.io/v1
+                kind: Network
+                metadata:
+                  name: cluster
+              value:
+                spec:
+                  networkType: OVNKubernetes
+  remediationAction: inform
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: placement-all-managed-clusters
+  namespace: open-cluster-management
+spec:
+  clusterSets:
+    - default
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-check-cni-plugin
+  namespace: open-cluster-management
+placementRef:
+  name: placement-all-managed-clusters
+  kind: Placement
+  apiGroup: cluster.open-cluster-management.io
+subjects:
+  - name: check-cni-plugin
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
