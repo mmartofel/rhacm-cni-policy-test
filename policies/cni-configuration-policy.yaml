@@ -1,0 +1,57 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: cni-configuration-policy
+  namespace: open-cluster-management
+  annotations:
+    policy.open-cluster-management.io/categories: CNI Driver Category
+    policy.open-cluster-management.io/standards: CNI must be OVNKubernetes
+    policy.open-cluster-management.io/controls: CNI Driver
+    policy.open-cluster-management.io/description: Policy to check if the CNI plugin is set to OVNKubernetes or to OpenShiftSDN. OVNKubernetes is a desired setting for production clusters.
+    policy.open-cluster-management.io/message: The CNI plugin is not set to OVNKubernetes but to OpenShiftSDN.
+spec:
+  disabled: false
+  remediationAction: inform   # change to enforce if you want ACM to try to fix
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: check-network-type
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: config.openshift.io/v1
+                kind: Network
+                metadata:
+                  name: cluster
+                spec:
+                  networkType: OVNKubernetes
+---
+# Placement across all clusters in the "default" ManagedClusterSet
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: placement-all-clusters
+  namespace: open-cluster-management
+spec:
+  clusterSets:
+    - default
+---
+# Bind policy to placement
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-cni-policy
+  namespace: open-cluster-management
+placementRef:
+  name: placement-all-clusters
+  kind: Placement
+  apiGroup: cluster.open-cluster-management.io
+subjects:
+  - name: cni-configuration-policy
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
