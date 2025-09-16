@@ -20,7 +20,7 @@ spec:
           name: check-network-type
         spec:
           remediationAction: inform
-          severity: high
+          severity: medium # can be low, medium, high, or critical
           object-templates:
             - complianceType: musthave
               objectDefinition:
