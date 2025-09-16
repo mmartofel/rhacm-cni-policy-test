@@ -1,12 +1,12 @@
-# CNI driver check policy for Red Hat OpenShift Advance Management for Kubernetes
+# CNI driver check policy for Red Hat OpenShift Advanced Cluster Management for Kubernetes
 
-This repository demonstrates how to check population of a OpenShift clusters for CNI driver configured with Red Hat OpenShift Advance Management for Kubernetes using Policy defined.
+This repository demonstrates how to check population of an OpenShift clusters for CNI driver configured with Red Hat OpenShift Advance Management for Kubernetes using simple Policy defined.
 
 ## Overview
 
-Older version of OpenShift could have OpenShiftSDN CNI driver configured as the one was a default back then. Recent versions, as a default one do have OVNKubernetes.
+Older version of OpenShift could have OpenShiftSDN CNI driver configured as the one that was default back then. Recent versions, as a default have OVNKubernetes. Major change really.
 
-Evaluating a population of clusters could be troublesome. Thanks to the Policy that you can implement with RHACM that fact can be reported to an operator a simple way as we demonstrate here. 
+Evaluating a population of clusters could be troublesome. Thanks to the simple policy that you can easily distingwished with RHACM and that fact can be demonstrated at the UI console.
 
 ## Prerequisites
 
@@ -29,13 +29,13 @@ you shoud see a new policy named `cni-configuration-policy` created, reporting c
 
 ![screenshot](images/1.png)
 
-In my cane I had one recent version cluster `local-cluster` with CNI driver `OVNKubernetes` and one older with `OpenShiftSDN` as a CNI driver set. Therefore you see one cluster as compliant and the second as not.
+In my case I had one recent version cluster (4.19) `local-cluster` with CNI driver `OVNKubernetes` and one older with `OpenShiftSDN` (4.14) as a CNI driver set. Therefore you see one cluster as compliant and a second as not.
 
 ![screenshot](images/2.png)
 
 ![screenshot](images/3.png)
 
-if you check 'View driff' for non compliant cluster, you can easily find out why it complains
+if you now check 'View driff' for non compliant cluster, you can easily find out why it complains there
 
 ![screenshot](images/4.png)
 
