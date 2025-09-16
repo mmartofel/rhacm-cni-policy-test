@@ -30,16 +30,3 @@ spec:
           not allowed_network_type
           msg := sprintf("CNI networkType '%v' is not allowed. Allowed types: %v", [input.review.object.status.networkType, input.parameters.allowedTypes])
         }
-# ---
-# apiVersion: constraints.gatekeeper.sh/v1beta1
-# kind: K8sRequiredNetworkType
-# metadata:
-#   name: require-ovn-kubernetes
-# spec:
-#   match:
-#     kinds:
-#       - apiGroups: ["operator.openshift.io"]
-#         kinds: ["Network"]
-#   parameters:
-#     allowedTypes:
-#       - OVNKubernetes
