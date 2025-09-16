@@ -1,0 +1,42 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: gatekeeper-cni-policy
+spec:
+  disabled: false
+  remediationAction: inform
+  policy-templates:
+    - objectDefinition:
+        apiVersion: constraints.gatekeeper.sh/v1beta1
+        kind: K8sRequiredNetworkType
+        metadata:
+          name: require-ovn-kubernetes
+        spec:
+          match:
+            kinds:
+              - apiGroups: ["operator.openshift.io"]
+                kinds: ["Network"]
+          parameters:
+            allowedTypes:
+              - OVNKubernetes
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: placement-all-managed-clusters
+spec:
+  clusterSets:
+    - default
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-gatekeeper-cni-policy
+placementRef:
+  name: placement-all-managed-clusters
+  kind: Placement
+  apiGroup: cluster.open-cluster-management.io
+subjects:
+  - name: gatekeeper-cni-policy
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
