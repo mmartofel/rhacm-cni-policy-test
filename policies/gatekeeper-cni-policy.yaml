@@ -14,7 +14,7 @@ spec:
         spec:
           match:
             kinds:
-              - apiGroups: ["operator.openshift.io"]
+              - apiGroups: ["config.openshift.io/v1"]
                 kinds: ["Network"]
           parameters:
             allowedTypes:
